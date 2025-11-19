@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Birthday Rajni Ma'am 🎉</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Pacifico|Quicksand:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+      font-family: 'Quicksand', Arial, sans-serif;
+      color: #6d2056;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .container {
+      background: rgba(255,255,255,0.93);
+      padding: 40px 30px;
+      border-radius: 24px;
+      box-shadow: 0 8px 40px #d6266a55;
+      text-align: center;
+      max-width: 400px;
+    }
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.7em;
+      color: #e7519e;
+      margin-bottom: 16px;
+      letter-spacing: 1.5px;
+    }
+    .subtitle {
+      font-size: 1.28em;
+      color: #fd7e14;
+      margin-bottom: 22px;
+      letter-spacing: 0.5px;
+    }
+    .cake {
+      margin: 20px auto;
+    }
+    button {
+      margin-top: 30px;
+      padding: 12px 32px;
+      font-size: 1.06em;
+      font-family: 'Quicksand', Arial, sans-serif;
+      background: linear-gradient(90deg, #e7519e 35%, #fd7e14 100%);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      box-shadow: 0 4px 24px #fd7e1477;
+      cursor: pointer;
+      transition: transform 0.14s;
+      outline: none;
+    }
+    button:hover {
+      transform: scale(1.07);
+    }
+    #confetti {
+      position: absolute;
+      pointer-events: none;
+      left: 0; top: 0; width: 100vw; height: 100vh; z-index: 999;
+    }
+    @media (max-width: 600px) {
+      .container { padding: 24px 6px; }
+      h1 { font-size: 2em; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="container">
+    <h1>Happy Birthday<br>Rajni Ma'am!</h1>
+    <p class="subtitle">Wishing you a fantastic year ahead 🎂✨</p>
+    <div class="cake">
+      <!-- Cute Birthday Cake SVG -->
+      <svg width="108" height="90" viewBox="0 0 108 90" fill="none">
+        <ellipse cx="54" cy="78" rx="42" ry="12" fill="#ffe6e6"/>
+        <rect x="22" y="45" width="64" height="34" rx="12" fill="#ffb3b3"/>
+        <rect x="28" y="45" width="52" height="27" rx="8" fill="#ff80aa"/>
+        <!-- Candles -->
+        <rect x="50" y="30" width="6" height="20" rx="3" fill="#ffe082"/>
+        <rect x="30" y="36" width="4" height="14" rx="2" fill="#ffd54f"/>
+        <rect x="74" y="36" width="4" height="14" rx="2" fill="#ffd54f"/>
+        <!-- Flames -->
+        <ellipse cx="53" cy="29" rx="2" ry="4" fill="#ffbc00"/>
+        <ellipse cx="32" cy="35" rx="1.2" ry="2.1" fill="#ffbc00"/>
+        <ellipse cx="76" cy="35" rx="1.2" ry="2.1" fill="#ffbc00"/>
+      </svg>
+    </div>
+    <button onclick="startParty()">🎉 Celebrate!</button>
+    <audio id="audio" src="https://cdn.pixabay.com/audio/2023/03/16/audio_125b6c7a63.mp3"></audio>
+  </div>
+  <script>
+    // Confetti animation
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    function createConfetti() {
+      for (let i = 0; i < 150; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * -canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 80 + 20,
+          color: `hsl(${Math.random() * 360}, 93%, 67%)`,
+          tilt: Math.random() * 10 - 10,
+          tiltAngle: 0,
+          tiltAngleIncremental: (Math.random() * 0.07) + 0.04
+        });
+      }
+    }
+    function drawConfetti() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        ctx.beginPath();
+        ctx.ellipse(p.x, p.y, p.r, p.r * 0.52, p.tilt, 0, 2 * Math.PI);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+      }
+      update();
+    }
+    function update() {
+      for (let i = 0; i < particles.length; i++) {
+        let p = particles[i];
+        p.y += Math.cos(p.d) + 1 + p.r/2;
+        p.x += Math.sin(0.07 * p.d);
+        p.tiltAngle += p.tiltAngleIncremental;
+        p.tilt = Math.sin(p.tiltAngle) * 12;
+        if (p.y > canvas.height) {
+          p.x = Math.random() * canvas.width;
+          p.y = -10;
+        }
+      }
+    }
+    let confettiActive = false, animationId;
+    function startConfetti() {
+      if (confettiActive) return;
+      confettiActive = true;
+      createConfetti();
+      function loop() {
+        drawConfetti();
+        animationId = requestAnimationFrame(loop);
+      }
+      loop();
+      setTimeout(stopConfetti, 4500);
+    }
+    function stopConfetti() {
+      confettiActive = false;
+      cancelAnimationFrame(animationId);
+      particles = [];
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+
+    // Party button
+    function startParty() {
+      startConfetti();
+      document.getElementById("audio").play();
+    }
+  </script>
+</body>
+</html>
